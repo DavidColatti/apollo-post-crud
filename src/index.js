@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 import { error, success } from "consola";
 import { ApolloServer } from "apollo-server-express";
 
-import * as AppModels from "./models";
+import AppModels from "./models";
 import { PORT, MONGODB_URI } from "./config";
 import { resolvers, typeDefs } from "./graphql";
 
