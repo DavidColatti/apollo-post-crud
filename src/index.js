@@ -1,7 +1,10 @@
+import express from "express";
+import mongoose from "mongoose";
 import { error, success } from "consola";
 import { ApolloServer } from "apollo-server-express";
-import express from "express";
-import { PORT } from "./config";
+
+import * as AppModels from "./models";
+import { PORT, MONGODB_URI } from "./config";
 import { resolvers, typeDefs } from "./graphql";
 
 const app = express();
@@ -9,19 +12,38 @@ const app = express();
 const server = new ApolloServer({
   typeDefs,
   resolvers,
-  context: {},
+  context: {
+    ...AppModels,
+  },
 });
 
-const startApp = async () => {
-  await server.start();
-  server.applyMiddleware({ app });
+const startServer = async () => {
+  try {
+    await mongoose.connect(MONGODB_URI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
 
-  app.listen(PORT, () =>
     success({
       badge: true,
-      message: `Server started on http://localhost:${PORT}/graphql`,
-    })
-  );
+      message: `Successfully connected with the Database.`,
+    });
+
+    await server.start();
+    server.applyMiddleware({ app });
+
+    app.listen(PORT, () =>
+      success({
+        badge: true,
+        message: `Server started on http://localhost:${PORT}/graphql`,
+      })
+    );
+  } catch (err) {
+    error({
+      badge: true,
+      message: err.message,
+    });
+  }
 };
 
-startApp();
+startServer();
