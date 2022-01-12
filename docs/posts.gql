@@ -1,5 +1,6 @@
-query {
+query GET_ALL_POSTS {
   getAllPosts {
+    id
     title
     content
     featuredImage
@@ -8,16 +9,39 @@ query {
   }
 }
 
-mutation CREATE_NEW_POST(
-  $title: String!
-  $content: String!
-  $featuredImage: String
-) {
-  createNewPost(
-    newPost: { title: $title, content: $content, featuredImage: $featuredImage }
-  ) {
+query GET_POST_BY_ID($id: ID!) {
+  getPostById(id: $id) {
+    id
     title
     content
     featuredImage
+    createdAt
+    updatedAt
+  }
+}
+
+mutation CREATE_NEW_POST($newPost: PostInput!) {
+  createNewPost(newPost: $newPost) {
+    title
+    content
+    featuredImage
+  }
+}
+
+mutation EDIT_POST_BY_ID($updatedPost: PostInput!, $id: ID!) {
+  editPostById(updatedPost: $updatedPost, id: $id) {
+    id
+    title
+    content
+    updatedAt
+    createdAt
+  }
+}
+
+mutation DELETE_POST_BY_ID($id: ID!) {
+  deletePostById(id: $id) {
+    id
+    message
+    success
   }
 }
