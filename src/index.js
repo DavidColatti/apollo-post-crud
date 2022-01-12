@@ -4,19 +4,32 @@ import mongoose from "mongoose";
 import { error, success } from "consola";
 import { graphqlUploadExpress } from "graphql-upload";
 import { ApolloServer } from "apollo-server-express";
+import { makeExecutableSchema } from "@graphql-tools/schema";
 
-import AppModels from "./models";
+import * as AppModels from "./models";
 import { PORT, MONGODB_URI } from "./config";
 import { resolvers, typeDefs } from "./graphql";
+import { schemaDirectives } from "./graphql/directives";
+import authMiddleware from "./middlewares/auth";
 
 const app = express();
+app.use(authMiddleware);
 app.use(express.static(join(__dirname, "/uploads")));
 
 const server = new ApolloServer({
-  typeDefs,
-  resolvers,
-  context: {
-    ...AppModels,
+  schema: makeExecutableSchema({
+    typeDefs,
+    resolvers,
+    schemaDirectives,
+  }),
+  context: ({ req }) => {
+    const { isAuth, user } = req;
+    return {
+      req,
+      user,
+      isAuth,
+      ...AppModels,
+    };
   },
 });
 

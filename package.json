@@ -9,6 +9,7 @@
   "author": "David Colatti <davidcolatti@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "@graphql-tools/schema": "7",
     "apollo-server-express": "^3.6.1",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.1",
@@ -18,8 +19,10 @@
     "esm": "^3.2.25",
     "express": "^4.17.2",
     "graphql": "^16.2.0",
+    "graphql-tools": "4.x",
     "graphql-upload": "^13.0.0",
     "jsonwebtoken": "^8.5.1",
+    "lodash": "^4.17.21",
     "mongoose": "^6.1.5",
     "yup": "^0.32.11"
   },

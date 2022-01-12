@@ -1,3 +1,2 @@
-import Post from "./post";
-
-export default { Post };
+export { default as User } from "./User";
+export { default as Post } from "./Post";
