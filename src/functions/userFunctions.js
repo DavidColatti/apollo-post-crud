@@ -3,7 +3,8 @@ import { sign } from "jsonwebtoken";
 import { SECRET } from "../config";
 
 export const issueToken = async (user) => {
-  const token = await sign(user, SECRET, { expiresIn: 60 * 60 * 24 });
+  // Token expires in 2 day
+  const token = await sign(user, SECRET, { expiresIn: 60 * 60 * 24 * 2 });
   return `Bearer ${token}`;
 };
 

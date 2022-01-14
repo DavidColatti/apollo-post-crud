@@ -4,6 +4,9 @@ import { issueToken, serializeUser } from "../../functions";
 
 export default {
   Query: {
+    authUserProfile: async (_, args, { user }) => {
+      return user;
+    },
     authenticateUser: async (_, { username, password }, { User }) => {
       try {
         // Find user by username

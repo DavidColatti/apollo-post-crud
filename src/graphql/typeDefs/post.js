@@ -22,9 +22,10 @@ export default gql`
     id: ID!
     title: String!
     content: String!
-    featuredImage: String
     createdAt: String
     updatedAt: String
+    featuredImage: String
+    author: User!
   }
 
   type PostNotification {
