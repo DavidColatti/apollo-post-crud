@@ -1,3 +1,4 @@
+import { ApolloError } from "apollo-server-express";
 import { hash, compare } from "bcryptjs";
 import { issueToken, serializeUser } from "../../functions";
 import {
@@ -19,12 +20,12 @@ export default {
       // Find user by username
       let user = await User.findOne({ username });
       if (!user) {
-        throw new Error("Username not found.");
+        throw new ApolloError("Username not found.", "404");
       }
       // Check for the password
       const isMatch = await compare(password, user.password);
       if (!isMatch) {
-        throw new Error("Invalid password.");
+        throw new ApolloError("Invalid password.", "403");
       }
       //Serialize User
       user = user.toObject();
@@ -47,12 +48,12 @@ export default {
       let user;
       user = await User.findOne({ username });
       if (user) {
-        throw new Error("Username is already taken.");
+        throw new ApolloError("Username is already taken.", "403");
       }
       // If the email is already taken
       user = await User.findOne({ email });
       if (user) {
-        throw new Error("Email is already registered.");
+        throw new ApolloError("Email is already registered.", "403");
       }
       // Create new User Instance
       user = new User(newUser);

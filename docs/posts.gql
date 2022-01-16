@@ -45,3 +45,29 @@ mutation DELETE_POST_BY_ID($id: ID!) {
     success
   }
 }
+
+query GET_POSTS_PAGINATED($page: Int, $limit: Int) {
+  getPostsByLimitAndPage(page: $page, limit: $limit) {
+    posts {
+      id
+      title
+      content
+      author {
+        id
+        username
+        email
+      }
+    }
+    paginator {
+      hasNextPage
+      hasPrevPage
+      currentPage
+      pageCount
+      postCount
+      slNo
+      perPage
+      prev
+      next
+    }
+  }
+}

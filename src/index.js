@@ -14,6 +14,7 @@ import authMiddleware from "./middlewares/auth";
 
 const app = express();
 app.use(authMiddleware);
+app.use(express.json());
 app.use(express.static(join(__dirname, "/uploads")));
 
 const server = new ApolloServer({

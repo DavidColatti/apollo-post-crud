@@ -1,3 +1,5 @@
+import { ApolloError } from "apollo-server-express";
+import { generatePaginationOptions } from "../../functions";
 import { postValidationRules } from "../../validators/post";
 
 export default {
@@ -9,9 +11,23 @@ export default {
     getPostById: async (_, { id }, { Post }) => {
       const post = await Post.findById(id).populate("author");
       if (!post) {
-        throw new Error("Post not found");
+        throw new ApolloError("Post not found", "404");
       }
       return post;
+    },
+    getPostsByLimitAndPage: async (_, { page, limit }, { Post }) => {
+      const posts = await Post.paginate(
+        {},
+        generatePaginationOptions({ page, limit })
+      );
+      return posts;
+    },
+    getAuthenticatedUsersPosts: async (_, { page, limit }, { user, Post }) => {
+      const posts = await Post.paginate(
+        { author: user._id.toString() },
+        generatePaginationOptions({ page, limit })
+      );
+      return posts;
     },
   },
   Mutation: {
@@ -34,7 +50,7 @@ export default {
       );
 
       if (!editedPost) {
-        throw new Error("Unable to edit the post.");
+        throw new ApolloError("Unable to edit the post.", "403");
       }
 
       return editedPost;
@@ -46,7 +62,7 @@ export default {
       });
 
       if (!deletedPost) {
-        throw new Error("Unable to delete the post.");
+        throw new ApolloError("Unable to delete the post.", "403");
       }
 
       return {
